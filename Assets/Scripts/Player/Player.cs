@@ -9,13 +9,17 @@ public class Player : MonoBehaviour
 	[SerializeField] private float playerVelocity;
 
 	private Animator animator;
+	private Rigidbody2D rigidbody;
 
 	private PlayerMovementation playerMovementation;
 	private PlayerStatus playerStatus;
 
+	private bool isDead = false;
+
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
+		rigidbody = GetComponent<Rigidbody2D>();
 
 		if (isDemoMovementation) playerMovementation = new PlayerDemoInput();
 		else playerMovementation = new PlayerInput();
@@ -30,8 +34,26 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-		playerStatus.Update(animator);
-		playerMovementation.Update(this, playerStatus);
+		if(!isDead)
+		{
+			playerStatus.Update(animator, rigidbody);
+			playerMovementation.Update(this, playerStatus);
 
+			if(Input.GetKeyDown(KeyCode.Y))
+			{
+				//Death
+				isDead = true;
+				animator.SetTrigger("ToDeath");
+			}
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if(collision.CompareTag("XmasTree"))
+		{
+			isDead = true;
+			animator.SetTrigger("ToDeath");
+		}
 	}
 }
