@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
 	private PlayerStatus playerStatus;
 
 	private bool isDead = false;
+	private bool isDone = false;
 
 	private void Awake()
 	{
@@ -34,17 +36,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-		if(!isDead)
+		if(!isDead && !isDone)
 		{
 			playerStatus.Update(animator, rigidbody);
 			playerMovementation.Update(this, playerStatus);
-
-			if(Input.GetKeyDown(KeyCode.Y))
-			{
-				//Death
-				isDead = true;
-				animator.SetTrigger("ToDeath");
-			}
 		}
 	}
 
@@ -52,8 +47,19 @@ public class Player : MonoBehaviour
 	{
 		if(collision.CompareTag("XmasTree"))
 		{
+			isDone = true;
+			playerStatus.ChangeToGift(animator, rigidbody);
+		} else if(collision.CompareTag("Radar") && !isDead && !playerStatus.IsGiftMode())
+		{
 			isDead = true;
 			animator.SetTrigger("ToDeath");
+			StartCoroutine(DelayToRestart());
 		}
+	}
+
+	private IEnumerator DelayToRestart()
+	{
+		yield return new WaitForSeconds(2f);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

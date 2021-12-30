@@ -12,19 +12,28 @@ public class PlayerStatus
 		{
 			if (isGiftMode)
 			{
-				animator.SetTrigger("toGhost");
-				isGiftMode = false;
-				rigidbody.gravityScale = 0;
-				rigidbody.velocity = Vector2.zero;
+				ChangeToGhost(animator, rigidbody);
 			}
 			else
 			{
-				animator.SetTrigger("toGift");
-				isGiftMode = true;
-				rigidbody.gravityScale = 1;
+				ChangeToGift(animator, rigidbody);
 			}
 		}
 
+	}
+
+	private void ChangeToGhost(Animator animator, Rigidbody2D rigidbody)
+	{
+		animator.SetTrigger("toGhost");
+		isGiftMode = false;
+		rigidbody.gravityScale = 0;
+		rigidbody.velocity = Vector2.zero;
+	}
+	public void ChangeToGift(Animator animator, Rigidbody2D rigidbody)
+	{
+		animator.SetTrigger("toGift");
+		isGiftMode = true;
+		rigidbody.gravityScale = 1;
 	}
 
 	public bool IsGiftMode()

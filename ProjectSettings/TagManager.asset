@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - XmasTree
+  - Radar
+  - FixBlock
   layers:
   - Default
   - TransparentFX
