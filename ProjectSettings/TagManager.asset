@@ -7,6 +7,7 @@ TagManager:
   - XmasTree
   - Radar
   - FixBlock
+  - TutorialGift
   layers:
   - Default
   - TransparentFX

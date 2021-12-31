@@ -15,32 +15,54 @@ public class Instructions : MonoBehaviour, IObservable
 	[SerializeField] private InstructionData instructionMoveAround;
 	[SerializeField] private InstructionData instructionChangeVision;
 
+	private CanvasGroup canvasGroup;
+	private Coroutine delayHideRoutine;
+
+	private List<Game_Events> calledEvents;
+
+	private void Awake()
+	{
+		calledEvents = new List<Game_Events>();
+		canvasGroup = GetComponent<CanvasGroup>();
+	}
 
 	public void OnNotify(Game_Events events)
 	{
+		if (calledEvents.Contains(events)) return;
+
 		switch(events)
 		{
-			case Game_Events.INSTRUCTIONS_SACK_TO_GHOST:
+			case Game_Events.INSTRUCTIONS_GHOST_TO_SACK:
 				instructionText.text = instructionSackToGhost.instructionText;
 				instructionImage.sprite = instructionSackToGhost.instructionImage;
+				canvasGroup.alpha = 1;
 
-				instructionText.text = "Press Z or K to change to Ghost Mode";
 				break;
 			case Game_Events.INSTRUCTIONS_MOVE_AROUND:
 				instructionText.text = instructionMoveAround.instructionText;
 				instructionImage.sprite = instructionMoveAround.instructionImage;
+				canvasGroup.alpha = 1;
 
-				instructionText.text = "Press WASD or Arrow Keys to Move Around (Only Ghost Mode)";
 				break;
 			case Game_Events.INSTRUCTIONS_CHANGE_VISION:
 				instructionText.text = instructionChangeVision.instructionText;
 				instructionImage.sprite = instructionChangeVision.instructionImage;
+				canvasGroup.alpha = 1;
 
-				instructionText.text = "Press X or L to Change to Matrix Mode";
 				break;
 		}
+
+		calledEvents.Add(events);
+
+		if (delayHideRoutine != null) StopCoroutine(delayHideRoutine);
+		delayHideRoutine = StartCoroutine(DelayToHideInstructions());
 	}
 
+	private IEnumerator DelayToHideInstructions()
+	{
+		yield return new WaitForSeconds(3f);
+		canvasGroup.alpha = 0;
+	}
 
 }
 

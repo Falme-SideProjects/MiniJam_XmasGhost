@@ -24,7 +24,7 @@ public class Subject : MonoBehaviour
 		}
 	}
 
-	private void LocateObservables()
+	public void LocateObservables()
 	{
 		observables.Add(FindObjectOfType<Instructions>());
 	}
